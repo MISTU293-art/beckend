@@ -19,13 +19,15 @@ app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname,"public","index.html"))
 });
 
-const db=mysql2.createConnection({
-    host:process.env.DB_HOST,
-    user:process.env.DB_USER,
-    password:process.env.DB_PASSWORD,
-    database:process.env.DB_NAME,
-
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT,
+    connectTimeout: 10000
 });
+
     db.connect(err =>{
    if(err){
     console.log("Failed:Database Error");
