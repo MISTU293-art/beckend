@@ -149,7 +149,7 @@
             const subject3 = document.getElementById("subject3").value;
             const message = document.getElementsByClassName("message")[0];
             try {
-                const res = await fetch('http://localhost:4000/add', {
+                const res = await fetch('`https://resultmanagementsystem-ij08.onrender.com/add', {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ name, studentId, department, subject1, subject2, subject3 })
