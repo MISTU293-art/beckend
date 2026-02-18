@@ -19,7 +19,7 @@ app.get('/',(req,res)=>{
     res.sendFile(path.join(__dirname,"public","index.html"))
 });
 
-const db = mysql.createPool({
+const db = mysql2.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
@@ -28,7 +28,7 @@ const db = mysql.createPool({
     connectTimeout: 10000
 });
 
-    db.connect(err =>{
+db.connect(err =>{
    if(err){
     console.log("Failed:Database Error");
     console.log(err);
@@ -80,6 +80,4 @@ app.get('/view/:studentId', (req, res) => {
 
 });
 
-app.get("/view/:studentId", (req, res) => {
-    res.redirect('/');
-});
+
