@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Upload Student Marks</title>
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f8;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .subject-inputs {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .subject-inputs .form-group {
+            flex: 1;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @media(max-width: 600px) {
+            .subject-inputs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Admin Panel - Upload Student Marks</h1>
+        <div class="message">
+
+        </div>
+        <div class="form-group">
+            <label for="sname">Student Name:</label>
+            <input type="text" id="sname" placeholder="Enter student name">
+        </div>
+
+        <div class="form-group">
+            <label for="studentId">Roll Number:</label>
+            <input type="text" id="studentId" placeholder="Enter roll number">
+        </div>
+
+        <div class="form-group">
+            <label for="department">Department:</label>
+            <select id="department">
+                <option value="CSE">CSE</option>
+                <option value="MECH">MECH</option>
+                <option value="CIVIL">Civil</option>
+                <option value="ELEC">Electrical</option>
+            </select>
+        </div>
+
+        <div class="subject-inputs">
+            <div class="form-group">
+                <label for="subject1">Physics Marks:</label>
+                <input type="text" id="subject1" placeholder="Enter marks">
+            </div>
+            <div class="form-group">
+                <label for="subject2">Mathematics Marks:</label>
+                <input type="text" id="subject2" placeholder="Enter marks">
+            </div>
+            <div class="form-group">
+                <label for="subject3">Electrical Eng. Marks:</label>
+                <input type="text" id="subject3" placeholder="Enter marks">
+            </div>
+        </div>
+
+        <button onclick="addStudent()">Upload Marks</button>
+    </div>
+<a href="view.html">View</a>
+    <script>
+        async function addStudent() {
+            const name = document.getElementById("sname").value;
+            const studentId = document.getElementById("studentId").value;
+            const department = document.getElementById("department").value;
+            const subject1 = document.getElementById("subject1").value;
+            const subject2 = document.getElementById("subject2").value;
+            const subject3 = document.getElementById("subject3").value;
+            const message = document.getElementsByClassName("message")[0];
+            try {
+                const res = await fetch('http://localhost:4000/add', {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, studentId, department, subject1, subject2, subject3 })
+                });
+                const result = await res.json();
+                message.innerHTML = result.message;
+                message.style.color = "green";
+            } catch (err) {
+                console.log(err);
+                message.innerHTML = "Error: Could not upload marks!";
+                message.style.color = "red";
+            }
+        }
+
+    </script>
+</body>
+
+</html>

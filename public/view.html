@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Result Portal</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #fff;
+            width: 100%;
+            max-width: 750px;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* Search Section */
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: #1e3c72;
+            outline: none;
+        }
+
+        .search-box button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #1e3c72;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #16325c;
+        }
+
+        /* Message */
+        .message {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: red;
+        }
+
+        /* Result Section */
+        .result-section {
+            display: none;
+            /* Hidden initially */
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #f4f6f9;
+        }
+
+        /* Student Info */
+        .student-info p {
+            margin-bottom: 6px;
+            font-size: 15px;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table th,
+        table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .total {
+            margin-top: 15px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .status {
+            margin-top: 10px;
+            padding: 8px;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .pass {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .fail {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <h1>Student Result Portal</h1>
+            <p>Academic Examination Result - 2026</p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="rollInput" placeholder="Enter Roll Number">
+            <button onclick="getData()">Check Result</button>
+            <div class="message" id="message"></div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+
+            <div class="student-info">
+                <p><strong>Name:</strong> <span id="studentName"></span></p>
+                <p><strong>Roll Number:</strong> <span id="studentRoll"></span></p>
+                <p><strong>Department:</strong> <span id="studentDept"></span></p>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                    </tr>
+                </thead>
+                <tbody id="marksTable">
+                    <tr>
+                        <td id="physics">Physics</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td id="math">Mathematics</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td id="ele">Electrical Engineering</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="upload"><strong>Result Published On:</strong></p>
+
+
+        </div>
+
+    </div>
+    <script>
+        async function getData() {
+
+            const studentId = document.getElementById("rollInput").value.trim();
+            const message = document.getElementById("message");
+            const resultSection = document.getElementById("resultSection");
+            const upload = document.getElementsByClassName("upload");
+
+            const name = document.getElementById("studentName");
+            const roll = document.getElementById("studentRoll");
+            const dept = document.getElementById("studentDept");
+
+            if (!studentId) {
+                message.innerText = "Please enter Roll Number";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:4000/view/${studentId}`);
+
+                if (!response.ok) {
+                    throw new Error("Student not found");
+                }
+
+                const data = await response.json();
+
+                name.innerText = data.name;
+                roll.innerText = data.studentId;
+                dept.innerText = data.department;
+
+                document.querySelector("#marksTable").innerHTML = `
+            <tr>
+                <td>Physics</td>
+                <td>${data.subject1}</td>
+            </tr>
+            <tr>
+                <td>Mathematics</td>
+                <td>${data.subject2}</td>
+            </tr>
+            <tr>
+                <td>Electrical Engineering</td>
+                <td>${data.subject3}</td>
+            </tr>
+        `;
+
+                if (data.upload_date) {
+                    const dateObj = new Date(data.upload_date);
+
+                    upload.innerText = "Result Published On: " +
+                        dateObj.toLocaleString();   // Shows date + time properly
+                }
+
+
+
+                resultSection.style.display = "block"
+                message.innerText = "";
+
+            } catch (err) {
+                message.innerText = "Student not found!";
+                resultSection.style.display = "none";
+              
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
