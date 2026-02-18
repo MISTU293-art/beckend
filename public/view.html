@@ -224,7 +224,7 @@
             }
 
             try {
-                const response = await fetch(`http://localhost:4000/view/${studentId}`);
+                const response = await fetch(`https://beckend-1-7cs4.onrender.com/view/${studentId}`);
 
                 if (!response.ok) {
                     throw new Error("Student not found");
